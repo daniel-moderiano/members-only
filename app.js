@@ -4,10 +4,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require("mongoose");
 
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+// Connect to mongoDB
+const mongoDb = process.env.MONGODB_URI;
+mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "mongo connection error"));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -20,7 +20,6 @@ exports.signupPost = [
 
     if (!errors.isEmpty()) {
       // There are errors. Render the form again with sanitised values and error messages. Note password is left out for security reasons
-      console.log(errors.array());
       res.render('signup', { 
         title: 'Sign Up', 
         user: {
@@ -35,23 +34,21 @@ exports.signupPost = [
       //  Perform password hashing
       bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
         // Create new user object with validated and sanitised data
+        console.log('hashing');
         const user = new User({
           fullName: req.body.fullName,
           username: req.body.username,
           password: hashedPassword,
           // If checkbox is left unchecked, the req.body will not even register the checkbox fields. By using a conditional that checks for the presence of isAdmin in req.body, we can deduce whether it has been checked or not
-          isAdmin: req.body.isAdmin ? true : false
+          isAdmin: req.body.isAdmin ? true : false,
+          isMember: false, // Default to false; set within app
+        }).save(err => {
+          if (err) { 
+            return next(err);
+          }
+          
+          res.redirect("/");
         });
-
-        // Save the newly created user (with hashed password) to the db
-        // user.save(err => {
-        //   if (err) { 
-        //     return next(err);
-        //   }
-        //   res.redirect("/");
-        // });
-        console.log(user);
-        res.redirect("/sign-up");
       });
     }
   },
