@@ -12,6 +12,13 @@ exports.signupPost = [
   body('fullName', 'Name is required').trim().isLength({ min: 1 }).escape(),
   body('username', 'A valid email is required').trim().isLength({ min: 1 }).isEmail().escape(),
   body('password', 'Minimum password length is 6 characters').trim().isLength({ min: 6 }).escape(),
+  body('confirmPassword').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Passwords do not match');
+    }
+    // Indicates the success of the validator, so return true valuie
+    return true;
+  }),
 
   (req, res, next) => {
 
