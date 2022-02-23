@@ -1,8 +1,29 @@
 <%- include('header')%>
-  <% include ./partials/messages %> 
+  <section class="pt-5">
+    <div class="container">
+      <h1><%= title %></h1>
+      <% include ./partials/messages %> 
 
-  <h1>Member's Only Website</h1>
-  <a href="/sign-up">Sign up</a>
-  <a href="/log-in">Log in</a>
+      <div class="mt-4">
+        <% if (messages.length > 0) { %>
+          <% messages.forEach(message => { %>
+            <div class="card mt-4">
+              <div class="card-body">
+                <h5 class="card-title"><%= message.title %></h5>
+                <h6 class="card-subtitle mb-2 text-muted"><%= message.author.fullName %></h6>
+                <p class="card-text"><%= message.text %> </p>
+                <p><%= message.timestamp %></p>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="lead">There are no messages</p>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+
+
   
 <%- include('footer')%>

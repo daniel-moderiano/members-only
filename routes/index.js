@@ -2,10 +2,19 @@ var express = require('express');
 var router = express.Router();
 const authController = require('../controllers/authController');
 const { isAuth } = require('./authMiddleware');
+const Message = require('../models/message');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  // Retrieve all message from the db
+  Message.find({})
+    .sort({ timestamp: 1 })
+    .populate('author')
+    .exec((err, messageList) => {
+      if (err) { return next(err) }
+      // Successful, so render index and pass all messages along to view template
+      res.render('index', { title: "Member's Only", messages: messageList });
+    });
 });
 
 // Sign in GET route
