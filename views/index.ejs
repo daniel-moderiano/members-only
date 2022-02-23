@@ -10,9 +10,9 @@
             <div class="card mt-4">
               <div class="card-body">
                 <h5 class="card-title"><%= message.title %></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><%= message.author.fullName %></h6>
+                <h6 class="card-subtitle mb-2 text-muted"><%= locals.user ? (locals.user.isMember && message.author.fullName) : 'Author hidden' %></h6>
                 <p class="card-text"><%= message.text %> </p>
-                <p><%= message.timestamp %></p>
+                <p class="small"><%= locals.user ? (locals.user.isMember && message.timestamp) : 'Date hidden' %></p>
               </div>
             </div>
           <% }) %>
