@@ -3,6 +3,7 @@ var router = express.Router();
 const authController = require('../controllers/authController');
 const { isAuth } = require('./authMiddleware');
 const Message = require('../models/message');
+const { DateTime } = require('luxon');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,8 +13,17 @@ router.get('/', function(req, res, next) {
     .populate('author')
     .exec((err, messageList) => {
       if (err) { return next(err) }
-      // Successful, so render index and pass all messages along to view template
-      res.render('index', { title: "Member's Only", messages: messageList });
+      // Successful, so update timestamps in messages to more freindly format for IU
+      const aleteredMessages = []
+      messageList.forEach((message) => {
+        let newMessage = {
+          ...message._doc,
+          timestamp: DateTime.fromJSDate(message.timestamp).toLocaleString(DateTime.DATETIME_MED),
+        };
+        aleteredMessages.push(newMessage);
+      })
+      // Render with altered message formats
+      res.render('index', { title: "Member's Only", messages: aleteredMessages });
     });
 });
 
