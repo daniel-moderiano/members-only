@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const authController = require('../controllers/authController');
+const { isAuth } = require('./authMiddleware');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -33,6 +34,10 @@ router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success', 'You have been logged out');
   res.redirect('/');
+});
+
+router.get('/protected-route', isAuth, (req, res, next) => {
+  res.send('You made it to the protected route');
 })
 
 module.exports = router;

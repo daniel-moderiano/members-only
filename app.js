@@ -37,6 +37,12 @@ require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Custom middleware to make the current user available as a locals variable so all views can access it for conditional rendering
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 // Flash setup
 app.use(flash())
 
