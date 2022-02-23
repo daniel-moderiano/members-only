@@ -77,11 +77,12 @@ exports.loginPost = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // There are errors. Render the form again with sanitised values and error messages. Note password is left out for security reasons
+      // There are errors. Render the form again with sanitised values and error messages.
       res.render('login', { 
         title: 'Log in', 
         user: {
           username: req.body.username,
+          password: req.body.password,
         }, 
         errors: errors.array() 
       });
@@ -94,10 +95,11 @@ exports.loginPost = [
   // Authenticate with local strategy. Note 
   passport.authenticate("local", {
     failureRedirect: "/log-in",
+    failureFlash: true,
   }),
 
   function (req, res) {
-    req.flash('successMsg', 'You are logged in!');
+    req.flash('success', 'You are logged in!');
     res.redirect('/dashboard');
   }
 ];

@@ -26,6 +26,13 @@ router.post('/log-in', authController.loginPost);
 // Dashboard GET route
 router.get('/dashboard', (req, res) => {
   res.render('dashboard', { title: 'Dashboard' });
+});
+
+// Logout get route (when user clicks log out btn)
+router.get('/logout', (req, res) => {
+  req.logout();
+  req.flash('success', 'You have been logged out');
+  res.redirect('/');
 })
 
 module.exports = router;
