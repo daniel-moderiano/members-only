@@ -7,6 +7,7 @@ var logger = require('morgan');
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
+const flash = require('connect-flash')
 
 var indexRouter = require('./routes/index');
 
@@ -35,6 +36,16 @@ app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: 
 require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Flash setup
+app.use(flash())
+
+// Setup global vars for flash messages
+app.use((req, res, next) => {
+  res.locals.successMsg = req.flash('successMsg');
+  res.locals.errorMsg = req.flash('errorMsg');
+  next();
+})
 
 // Routes
 app.use('/', indexRouter);

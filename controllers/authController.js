@@ -28,12 +28,14 @@ exports.signupPost = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // There are errors. Render the form again with sanitised values and error messages. Note password is left out for security reasons
+      // There are errors. Render the form again with sanitised values and error messages.
       res.render('signup', { 
         title: 'Sign Up', 
         user: {
           fullName: req.body.fullName,
           username: req.body.username,
+          password: req.body.password,
+          confirmPassword: req.body.confirmPassword,
           isAdmin: req.body.isAdmin ? true : false,
         }, 
         errors: errors.array() 
@@ -91,7 +93,11 @@ exports.loginPost = [
 
   // Authenticate with local strategy. Note 
   passport.authenticate("local", {
-    successRedirect: "/dashboard",
     failureRedirect: "/log-in",
-  })
+  }),
+
+  function (req, res) {
+    req.flash('successMsg', 'You are logged in!');
+    res.redirect('/dashboard');
+  }
 ];

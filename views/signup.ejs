@@ -3,6 +3,7 @@
   <section class="pt-3" >
     <div class="container" style="width: 28rem">
       <h1>Sign up</h1>
+      <% include ./partials/messages %> 
       <form action="" method="POST" >
         <div class="form-group mt-4">
           <label for="fullName">Full name</label>
@@ -14,11 +15,11 @@
         </div>
         <div class="form-group mt-4">
           <label for="password">Password</label>
-          <input type="password" required name="password" class="form-control" id="password">
+          <input type="password" required name="password" class="form-control" id="password" value="<%= locals.user ? locals.user.password : '' %>">
         </div>
         <div class="form-group mt-4">
           <label for="confirmPassword">Confirm password</label>
-          <input type="password" required name="confirmPassword" class="form-control" id="confirmPassword">
+          <input type="password" required name="confirmPassword" class="form-control" id="confirmPassword" value="<%= locals.user ? locals.user.confirmPassword : '' %>">
         </div>
         <div class="form-group mt-4">
           <label for="isAdmin" class="form-check-label">Enable admin rights</label>
@@ -32,15 +33,8 @@
         </div>
         <button type="submit" class="btn btn-primary mt-4">Submit</button>
       </form>
-    
-      <% if (locals.errors) { %>
-        <ul class="list-group mt-4">
-          <% errors.forEach(error => { %>
-            <li class="list-group-item text-danger border-danger">! <%= error.msg %></li>
-          <% }) %>
-        </ul>
-      <% } %>
     </div>
+    
   </section>
   
 <%- include('footer')%>

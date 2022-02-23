@@ -1,0 +1,23 @@
+<% if (locals.errors) { %>
+  <% errors.forEach(error => { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= error.msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% }) %>
+<% } %>
+
+<% if (locals.successMsg.length !== 0) { %>
+  <% console.log(successMsg) %> 
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= successMsg[0] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<% if (locals.errorMsg.length !== 0) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= errorMsg[0] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>

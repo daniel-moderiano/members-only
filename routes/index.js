@@ -23,4 +23,9 @@ router.get('/log-in', function(req, res) {
 // Log in POST route (authenticate user)
 router.post('/log-in', authController.loginPost);
 
+// Dashboard GET route
+router.get('/dashboard', (req, res) => {
+  res.render('dashboard', { title: 'Dashboard' });
+})
+
 module.exports = router;
