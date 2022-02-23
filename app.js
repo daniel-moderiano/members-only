@@ -5,6 +5,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
+const session = require("express-session");
+const passport = require("passport");
 
 var indexRouter = require('./routes/index');
 
@@ -26,6 +28,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Session setup (we do not use session directly, but passport interacts with it)
+app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
+
+// Passport config import (essentially pulls in the passport.use() line from config) and other passport middleware
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

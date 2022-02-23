@@ -1,12 +1,45 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require("express-validator");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+
+
+// Authentication setup with passportJS
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) { 
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false, { message: "Incorrect username" });
+      }
+      if (user.password !== password) {
+        return done(null, false, { message: "Incorrect password" });
+      }
+      return done(null, user);
+    });
+  })
+);
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 // User reaches sign up page on GET route. No frills, display form
 exports.signupGet = function(req, res) {
   res.render('signup', { title: 'Sign Up' });
 };
 
+// Create hashed password and save new user to db
 exports.signupPost = [
   // Validate and sanitise fields
   body('fullName', 'Name is required').trim().isLength({ min: 1 }).escape(),
@@ -41,7 +74,6 @@ exports.signupPost = [
       //  Perform password hashing
       bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
         // Create new user object with validated and sanitised data
-        console.log('hashing');
         const user = new User({
           fullName: req.body.fullName,
           username: req.body.username,
