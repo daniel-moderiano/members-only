@@ -1,0 +1,28 @@
+<%- include('header')%>
+  
+  <section class="pt-3" >
+    <div class="container" style="width: 28rem">
+      <h1><%= title %></h1>
+      <form action="" method="POST" >
+        <div class="form-group mt-4">
+          <label for="username">Username</label>
+          <input type="email" required name="username" class="form-control" id="username" placeholder="Enter your email" value="<%= locals.user ? locals.user.username : '' %>">
+        </div>
+        <div class="form-group mt-4">
+          <label for="password">Password</label>
+          <input type="password" required name="password" class="form-control" id="password">
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+      </form>
+    
+      <% if (locals.errors) { %>
+        <ul class="list-group mt-4">
+          <% errors.forEach(error => { %>
+            <li class="list-group-item text-danger border-danger">! <%= error.msg %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </section>
+  
+<%- include('footer')%>

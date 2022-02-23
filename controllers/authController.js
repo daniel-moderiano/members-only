@@ -1,38 +1,7 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require("express-validator");
-const session = require("express-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
-
-// Authentication setup with passportJS
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    User.findOne({ username: username }, (err, user) => {
-      if (err) { 
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      }
-      if (user.password !== password) {
-        return done(null, false, { message: "Incorrect password" });
-      }
-      return done(null, user);
-    });
-  })
-);
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
 // User reaches sign up page on GET route. No frills, display form
 exports.signupGet = function(req, res) {
@@ -91,4 +60,38 @@ exports.signupPost = [
       });
     }
   },
-]
+];
+
+
+// Handle authenticating user on login
+exports.loginPost = [
+  // Validate and sanitise fields
+  body('username', 'Please enter your username (email address)').trim().isLength({ min: 1 }).isEmail().escape(),
+  body('password', 'Please enter your password').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitised values and error messages. Note password is left out for security reasons
+      res.render('login', { 
+        title: 'Log in', 
+        user: {
+          username: req.body.username,
+        }, 
+        errors: errors.array() 
+      });
+    } else {
+      // Data from form is valid. Pass to next middleware (authentication)
+      next();
+    }
+  },
+
+  // Authenticate with local strategy. Note 
+  passport.authenticate("local", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/log-in",
+  })
+];

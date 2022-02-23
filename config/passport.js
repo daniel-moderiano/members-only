@@ -19,6 +19,7 @@ const verifyCallback = (username, password, done) => {
       return done(null, false, { message: "Incorrect username" });
     }
     // User exists in db, need to compare hashed/salted passwords
+    
     bcrypt.compare(password, user.password, (err, res) => {
       if (res) {
         // Passwords match, user is verified, credentials are valid. User object is returned
