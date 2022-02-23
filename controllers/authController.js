@@ -57,8 +57,8 @@ exports.signupPost = [
           if (err) { 
             return next(err);
           }
-          
-          res.redirect("/");
+          req.flash('success', 'You can now log in with your new account')
+          res.redirect("/log-in");
         });
       });
     }
