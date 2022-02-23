@@ -1,0 +1,23 @@
+<%- include('header')%>
+  <section class="pt-5">
+    <div class="container text-center d-flex flex-column justify-content-center align-items-center">
+      <h1><%= title %></h1>
+      <% include ./partials/messages %>
+      <% if (locals.currentUser) { %>
+        <% if (locals.currentUser.isMember) { %>
+          <p class="lead">You are already a member!</p>
+        <% } else { %>
+          <form action="" method="POST" class="mt-4">
+            <div class="form-group">
+              <label for="memberPassword">Member password</label>
+              <input type="text" class="form-control" id="memberPassword" placeholder="letmein" name="memberPassword">
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 btn-lg">Join member's club</button>
+          </form>
+        <% } %> 
+      <% } else { %>
+        <p class="lead">Log in or sign up to join the club</p>
+      <% } %> %>
+    </div>
+  </section>
+<%- include('footer')%>

@@ -33,10 +33,13 @@ router.get('/log-in', function(req, res) {
 // Log in POST route (authenticate user)
 router.post('/log-in', authController.loginPost);
 
-// Dashboard GET route
-router.get('/dashboard', (req, res) => {
-  res.render('dashboard', { title: 'Dashboard' });
+// Member signup GET route
+router.get('/member-signup', (req, res) => {
+  res.render('member-signup', { title: 'Join the club!' });
 });
+
+// Member signup POST route
+router.post('/member-signup', authController.memberPost);
 
 // Logout get route (when user clicks log out btn)
 router.get('/logout', (req, res) => {

@@ -64,7 +64,6 @@ exports.signupPost = [
   },
 ];
 
-
 // Handle authenticating user on login
 exports.loginPost = [
   // Validate and sanitise fields
@@ -99,7 +98,34 @@ exports.loginPost = [
   }),
 
   function (req, res) {
-    req.flash('success', 'You are logged in!');
-    res.redirect('/dashboard');
+    req.flash('success', 'You are now logged in and can join the club');
+    res.redirect('/member-signup');
   }
 ];
+
+// Promote a user to member
+exports.memberPost = [
+   // Validate and sanitise fields (compare to password needed)
+   body('memberPassword').trim().escape().equals('letmein').withMessage('Incorrect password'),
+   (req, res, next) => {
+      console.log(req.body.memberPassword);
+     // Extract the validation errors from a request
+     const errors = validationResult(req);
+ 
+     if (!errors.isEmpty()) {
+       // There are errors. Render the form again with sanitised values and error messages.
+       res.render('member-signup', { 
+         title: 'Join the club!', 
+         errors: errors.array() 
+       });
+     } else {
+      // Correct password entered.
+      User.updateOne({ username: req.user.username }, { $set: { isMember: true }})
+        .then(() => {
+          req.flash('successMsg', 'You are now a member!')
+          res.redirect('/')
+        })
+        .catch(err => next(err))
+     }
+   },
+]
