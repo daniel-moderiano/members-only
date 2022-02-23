@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require("express-validator");
 const passport = require("passport");
+const Message = require('../models/message')
 
 // User reaches sign up page on GET route. No frills, display form
 exports.signupGet = function(req, res) {
@@ -107,8 +108,8 @@ exports.loginPost = [
 exports.memberPost = [
    // Validate and sanitise fields (compare to password needed)
    body('memberPassword').trim().escape().equals('letmein').withMessage('Incorrect password'),
+
    (req, res, next) => {
-      console.log(req.body.memberPassword);
      // Extract the validation errors from a request
      const errors = validationResult(req);
  
@@ -128,4 +129,52 @@ exports.memberPost = [
         .catch(err => next(err))
      }
    },
-]
+];
+
+// Create new message
+exports.messagePost = [
+  // Validate and sanitise fields (compare to password needed)
+  body('title', 'Title cannot be empty').trim().notEmpty().escape(),
+  body('text', 'Message cannot be empty').trim().notEmpty(),
+
+  (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    // Create new message for db
+    const newMessage = new Message({
+      title: req.body.title,
+      text: req.body.text,
+      timestamp: new Date(),
+      author: req.user,
+    })
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitised values and error messages.
+      res.render('new-message', { 
+        title: 'Join the club!', 
+        message: { title: req.body.title, text: req.body.text },
+        errors: errors.array() 
+      });
+    } else {
+    // Message passes validation, so save to db
+    newMessage.save(err => {
+      if (err) { 
+        return next(err);
+      }
+      res.redirect("/");
+    });
+    }
+  },
+];
+
+// Delete message
+exports.messageDelete = function (req, res, next) {
+  // No associated deletes are necessary with NFTs, delete immediately
+  Message.findByIdAndRemove(req.body.msgid, function deleteMsg(err) {
+    if (err) { return next(err); }
+    // Success, return to home with alert confirm
+    req.flash('success', 'Message deleted');
+    res.redirect('/');
+  })
+};

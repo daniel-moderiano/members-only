@@ -29,7 +29,20 @@
                     <%= 'Date hidden' %>
                   <% } %> 
                 </p>
+                <% if (locals.currentUser) { %>
+                  <% if (locals.currentUser.isAdmin) { %>
+                    <div class="delete">
+                      <form action="" method="post">
+                        <div class="form-group">
+                          <input type="hidden" id="msgid" name="msgid" required value="<%= message._id %>" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    </div>
+                  <% } %> 
+                <% } %>
               </div>
+              
             </div>
           <% }) %>
         <% } else { %>

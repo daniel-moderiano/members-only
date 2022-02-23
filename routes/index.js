@@ -27,6 +27,9 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* Message delete route */
+router.post('/', authController.messageDelete);
+
 // Sign in GET route
 router.get('/sign-up', function(req, res, next) {
   res.render('signup', { title: 'Sign up' });
@@ -60,6 +63,15 @@ router.get('/logout', (req, res) => {
 
 router.get('/protected-route', isAuth, (req, res, next) => {
   res.send('You made it to the protected route');
+});
+
+// New message GET route
+router.get('/new-message', (req, res) => {
+  res.render('new-message', { title: 'New message' })
 })
+
+// New message POST route
+router.post('/new-message', authController.messagePost)
+
 
 module.exports = router;

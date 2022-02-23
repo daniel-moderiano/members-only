@@ -1,0 +1,27 @@
+<%- include('header')%>
+  
+  <section class="pt-3" >
+    <div class="container" style="width: 28rem">
+      <h1><%= title %></h1>
+      <% include ./partials/messages %> 
+      <% if (locals.currentUser) { %>
+        <form action="" method="POST" >
+          <div class="form-group mt-4">
+            <label for="title">Title</label>
+            <input type="text" required name="title" class="form-control" id="title" value="<%= locals.message ? locals.message.title : '' %>">
+          </div>
+          <div class="form-group mt-4">
+            <label for="text">Message</label>
+            <textarea name="text" id="text" required class="form-control"><%= locals.message ? locals.message.text : '' %></textarea>
+          </div>
+        
+          <button type="submit" class="btn btn-primary mt-4">Post message</button>
+        </form>
+      <% } else { %>
+        <p class="lead">You must be logged in to post messages</p>
+      <% } %>
+    </div>
+    
+  </section>
+  
+<%- include('footer')%>
